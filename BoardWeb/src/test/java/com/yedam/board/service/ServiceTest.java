@@ -7,6 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.yedam.board.domain.BoardVO;
+import com.yedam.board.domain.Criteria;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -21,8 +22,15 @@ public class ServiceTest {
 	
 	@Test
 	public void getListTest() {
-		log.info(service.getList());
+		Criteria cri = new Criteria(1,30);
+		cri.setType("TCW");
+		cri.setKeyword("user02");
+		//cri.setPageNum(5);
+		service.getList(cri).forEach(board -> log.info(board));
 	}
+//	public void getListTest() {
+//		log.info(service.getList());
+//	}
 	
 	public void removeTest() {
 		log.info("결과 : "+service.remove(5L));

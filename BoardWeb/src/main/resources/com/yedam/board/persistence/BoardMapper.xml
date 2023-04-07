@@ -2,31 +2,82 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="com.yedam.board.persistence.BoardMapper">
 
-  <select id="getList" resultType="com.yedam.board.domain.BoardVO">
-    select * from tbl_board where bno > 0
-  </select>
-  
-  <insert id="insertSelectKey" parameterType="com.yedam.board.domain.BoardVO">
-  	<selectKey keyProperty="bno" order="BEFORE" resultType="Long">
-  		select seq_board.nextval from dual
-  	</selectKey>
-  	insert into tbl_board (bno, title, content, writer)
-  	values (#{bno}, #{title}, #{content}, #{writer})
-  </insert>
-  
-  <select id="read" resultType="com.yedam.board.domain.BoardVO">
-  	select * from tbl_board where bno = #{bno}
-  </select>
-  
-  <delete id="delete" parameterType="Long">
-  	delete from tbl_board where bno = #{bno}
-  </delete>
-  
-  <update id="update" parameterType="com.yedam.board.domain.BoardVO">
-  	update tbl_board set title=#{title}, content=#{content} where bno = #{bno}
-  </update>
-  
+	<!-- 반복되는 쿼리문이 있을 때 미리 선언 -->
+	<sql id="criteria">
+		<trim prefix="(" suffix=") and " prefixOverrides="or">
+			<foreach collection="typeArr" item="type">
+				<trim prefix=" or ">
+					<choose>
+						<when test="type == 'T'.toString() ">
+							title like '%'||#{keyword}||'%'
+							<!-- orcle에서 ||는 두 문장을 연결하는 역할 -->
+						</when>
+						<when test="type == 'C'.toString()">
+							content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							writer like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+
+	<select id="getList" resultType="com.yedam.board.domain.BoardVO">
+		select * from tbl_board where bno > 0
+	</select>
+
+	<select id="getListWithPaging"
+		resultType="com.yedam.board.domain.BoardVO"
+		parameterType="com.yedam.board.domain.Criteria">
+		<!-- 인덱스 실행계획. /* + */ 형식으로 써야 함. 최대한 데이터를 빨리 가져오는것이 목적 -->
+  <![CDATA[
+  	select bno, title, content, writer, regdate, updatedate
+	from (select /* + INDEX_DESC(tbl_board pk_board) */
+                 rownum rn, bno, title, content, writer, regdate, updatedate
+       	  from tbl_board
+       	  where
+  ]]>
+  <include refid="criteria"></include>
+  <![CDATA[    	  
+       	  rownum <= #{pageNum} * #{amount}
+       	 )
+	where rn > (#{pageNum}-1) * #{amount}
+  ]]>
+	</select>
+
+	<insert id="insertSelectKey"
+		parameterType="com.yedam.board.domain.BoardVO">
+		<selectKey keyProperty="bno" order="BEFORE"
+			resultType="Long">
+			select seq_board.nextval from dual
+		</selectKey>
+		insert into tbl_board (bno, title, content, writer)
+		values (#{bno}, #{title}, #{content}, #{writer})
+	</insert>
+
+	<select id="read" resultType="com.yedam.board.domain.BoardVO">
+		select * from tbl_board where bno = #{bno}
+	</select>
+
+	<delete id="delete" parameterType="Long">
+		delete from tbl_board where bno = #{bno}
+	</delete>
+
+	<update id="update"
+		parameterType="com.yedam.board.domain.BoardVO">
+		update tbl_board set title=#{title}, content=#{content} where bno = #{bno}
+	</update>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*) from tbl_board where
+		<include refid="criteria"></include>
+		bno > 0
+		<!-- bno가 primary key이기도 하지만 index이기도 해서 넣어주면 조회가 훨씬 빨리 이루어짐 -->
+	</select>
+
 </mapper>
