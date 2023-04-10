@@ -34,10 +34,10 @@
 	<select id="getListWithPaging"
 		resultType="com.yedam.board.domain.BoardVO"
 		parameterType="com.yedam.board.domain.Criteria">
-		<!-- 인덱스 실행계획. /* + */ 형식으로 써야 함. 최대한 데이터를 빨리 가져오는것이 목적 -->
+		<!-- 인덱스 실행계획. /*+ */ 형식으로 써야 함. 최대한 데이터를 빨리 가져오는것이 목적 -->
   <![CDATA[
   	select bno, title, content, writer, regdate, updatedate
-	from (select /* + INDEX_DESC(tbl_board pk_board) */
+	from (select /*+ INDEX_DESC(tbl_board pk_board) */
                  rownum rn, bno, title, content, writer, regdate, updatedate
        	  from tbl_board
        	  where
