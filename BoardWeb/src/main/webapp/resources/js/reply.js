@@ -39,7 +39,7 @@ var replyService = (function () {
         var page = param.page;
         $.getJSON('/replies/pages/' + bno + '/' + page + '.json', function (data) {
             if (callback) {
-                callback(data)
+                callback(data.replyCnt, data.list)
                 // console.log(data)
             }
         }).fail(function (err) {
