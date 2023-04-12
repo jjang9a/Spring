@@ -4,13 +4,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <jsp:include page="includes/header.jsp"></jsp:include>
-<h4>도서 등록</h4>
+<h3>도서 등록</h3>
 
 <form action="add" id="addForm" method="post">
 	<table>
 		<tr>
 			<th>도서번호</th>
-			<td><input type="text" name="bookNo" value="${bno}"></td>
+			<td><input type="text" name="bookNo" value="${bno}" readonly></td>
 		</tr>
 		<tr>
 			<th>도서명</th>
@@ -51,7 +51,8 @@ $('#submitBtn').on('click', function(e){
 		addForm.find('input[name="bookName"]').focus()
 		return;
 	}
-	addForm.submit(); 
+	addForm.submit();
+	alert('도서 등록이 완료되었습니다');
 })
 
 </script>

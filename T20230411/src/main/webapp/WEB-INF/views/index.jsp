@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <jsp:include page="includes/header.jsp"></jsp:include>
 
-<h4 style="text-align : center">도서 대여관리 프로그램</h4>
+<h3 style="text-align : center">도서 대여관리 프로그램</h3>
 <p>
 국제 대여점의 도서등록, 대여정보 데이터베이스를 구축하고, 도서.DVD 대여관리를 위한 프로그램이다.<br>
 프로그램 작성 순서<br><br>

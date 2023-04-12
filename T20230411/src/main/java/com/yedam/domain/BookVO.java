@@ -1,5 +1,7 @@
 package com.yedam.domain;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -12,4 +14,8 @@ public class BookVO {
 	private int bookPrice;
 	private String bookPublisher;
 	private String bookInfo;
+	
+	private int rentNo;
+	private int rentSum;
+	private int rentCnt;
 }

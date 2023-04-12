@@ -1,5 +1,7 @@
 package com.yedam.app;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,8 +42,19 @@ public class BookController {
 	}
 	
 	@GetMapping("/list")
-	public void list() {
+	public void list(Model model) {
 		log.info("컨트롤 - 도서 조회");
+		List<BookVO> list = bookServie.getBookList();
+		log.info(list);
+		model.addAttribute("list", list);
+	}
+	
+	@GetMapping("/rent")
+	public void rent(Model model) {
+		log.info("컨트롤 - 대여 조회");
+		List<BookVO> list = bookServie.getRent();
+		log.info(list);
+		model.addAttribute("list", list);
 	}
 	
 }
