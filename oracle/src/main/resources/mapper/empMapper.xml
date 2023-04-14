@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.demo.mapper.EmpMapper">
+	<resultMap type="DeptVO" id="deptResult">
+		<collection property="emps"
+					javaType="ArrayList"
+					ofType="EmpVO"
+					column="department_id"
+					select="getEmpListVO">
+		</collection>
+	</resultMap> 
+
+	<select id="getDeptList" resultMap="deptResult">
+		select * from departments
+	</select>
+
+	<!-- 부서 단건삭제 -->
+	<delete id="deptDelete" parameterType="deptVO">
+		DELETE FROM DEPARTMENTS
+		WHERE	
+		<foreach collection="departmentIds" item="dept" open="department_id in(" separator="," close=")">
+			#{dept}
+		</foreach>	
+	</delete>
+
+	<select id="getEmpListVO" resultType="empVO" parameterType="empVO">
+		select * from employees
+		<where>
+			<if test="departmentId != null and departmentId !=''.toString() ">
+		<!-- 또는 <if test='departmentId != null and departmentId !="" '> (따옴표 서로 바뀜) -->
+				and department_id = #{departmentId}
+			</if>
+			<!-- <if test="firstName != null and firstName !='' ">
+		''공백이거나 한글자이기때문에 toString생략 가능. 만약에 =='AB'처럼 두글자 이상이였다면 반드시 toString()해줘야 함
+		
+				and first_name like '%' || #{firstName} || '%'
+					변수 앞에 쓰는 #는 값에 ''를 붙여 입력, $는 따옴표 없이 값만 들어옴 따라서 아래의 식이 가능
+				and first_name like '%${firstName}%'
+			</if> -->
+		</where>
+	</select>
+
+	<select id="getEmpList" resultType="map">
+		select EMPLOYEE_ID "employeeId",
+				FIRST_NAME "firstName",
+				LAST_NAME,
+				EMAIL,
+				PHONE_NUMBER,
+				HIRE_DATE,
+				JOB_ID,
+				SALARY,
+				COMMISSION_PCT,
+				MANAGER_ID,
+				DEPARTMENT_ID
+		from employees
+	</select>
+	
+	<select id="getEmp" resultType="map" parameterType="int">
+		select * from employees where employee_id = #{value}
+	</select>
+</mapper>
