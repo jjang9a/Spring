@@ -5,7 +5,7 @@
   
 <mapper namespace="co.comp.boot.user.mapper.UserMapper">
 
-<select id="getUser" resultType="UserVO">
+<select id="getUser" resultType="co.comp.boot.user.UserVO">
 	select * from t_user where login_id=#{loginId}
 </select>
 

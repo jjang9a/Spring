@@ -10,7 +10,7 @@ import co.comp.boot.user.UserVO;
 import co.comp.boot.user.mapper.UserMapper;
 import co.comp.boot.user.service.UserService;
 
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService, UserDetailsService{
 
 	@Autowired UserMapper userMapper;

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>login.html</title>
 </head>
 <body>
-	<form action="${pageContext.request.contextPath }/login" method="post">
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-		<input name="userid">
+	<form th:action="|${#request.contextPath}/login|" method="post">
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+		<input name="userId">
 		<input name="password">
 		<button>로그인</button>
 	</form>
